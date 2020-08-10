@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { CardList } from "../card-list/card-list.component";
 import { SearchBox } from "../search-box/search-box.component";
+import { Pagination } from 'semantic-ui-react';
 
 
 class EpisodeList extends Component {
@@ -10,39 +11,38 @@ class EpisodeList extends Component {
     this.state = {
       episodes: [],
       searchField: "",
+      pageNo: 1,
+      totalPages: null
     };
 
     this.handleChange = this.handleChange.bind(this);
   }
 
-  fetchUsers() {
-    fetch(`https://rickandmortyapi.com/api/episode/`)
-      .then(response => response.json())
-      .then(data =>
-        this.setState({
-          episodes: data.results,
-          isLoading: false,
-        })
-        )
-      .catch(error => this.setState({ error, isLoading: false }));
+  componentWillMount() {
+    this.loadEpisodes();
   }
 
-  componentDidMount() {
-    this.fetchUsers();
-  }
-  
+  loadEpisodes = () => {
+    const { pageNo } = this.state;
+    const url = `https://rickandmortyapi.com/api/episode/?page=${pageNo}`;
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((json) =>
+        this.setState({
+          episodes: [...json.results],
+          totalPages: json.info.pages,
+        })
+      );
+  };
     
   handleChange(e) {
     this.setState({ searchField: e.target.value })
   };
-  
-  handlePageChange(pageNumber) {
-    console.log(`active page is ${pageNumber}`);
-    this.setState({activePage: pageNumber});
-  }
+
 
   render() {
-    const {episodes, searchField} = this.state;
+    const {episodes, searchField, pageNo, totalPages} = this.state;
     const filteredEpisodes = episodes.filter(episode => 
       episode.name.toLowerCase().includes(searchField.toLowerCase()));
     return (
@@ -52,6 +52,15 @@ class EpisodeList extends Component {
           handleChange ={this.handleChange}
         />
         <CardList episodes={filteredEpisodes} />
+        <Pagination
+          onPageChange={(event, data) =>
+            this.setState({ pageNo: data.activePage }, this.loadEpisodes)
+          }
+          defaultActivePage={1}
+          activePage={pageNo}
+          siblingRange={1}
+          totalPages={totalPages}
+        />
       </div>
     );
   }

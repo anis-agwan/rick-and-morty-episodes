@@ -4,7 +4,7 @@ import { HomePage } from "./components/home-page/home";
 
 import './App.css';
 import EpisodeList from './components/episode-page/episode-page.component';
-import Header from './components/header/header.component';
+import Header from './components/header/header.component.js';
 
 class App extends Component {
   render() {
