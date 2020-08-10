@@ -15,11 +15,22 @@ class EpisodeList extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount() {
-    fetch('https://rickandmortyapi.com/api/episode/')
-    .then(response => response.json())
-    .then(episodes => this.setState({ episodes: episodes.results }));
+  fetchUsers() {
+    fetch(`https://rickandmortyapi.com/api/episode/`)
+      .then(response => response.json())
+      .then(data =>
+        this.setState({
+          episodes: data.results,
+          isLoading: false,
+        })
+        )
+      .catch(error => this.setState({ error, isLoading: false }));
   }
+
+  componentDidMount() {
+    this.fetchUsers();
+  }
+  
     
   handleChange(e) {
     this.setState({ searchField: e.target.value })
