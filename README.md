@@ -1,6 +1,6 @@
 # Live Demo
 
-## https://nostalgic-minsky-cfc46d.netlify.app/#/
+## https://rick-and-morty-episodes.netlify.app/#/
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
